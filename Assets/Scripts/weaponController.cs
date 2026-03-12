@@ -36,7 +36,7 @@ public class weaponController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
     }
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }

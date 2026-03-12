@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public float startingTime = 30f;
+    public Text timerText;
 
     [HideInInspector] public float currentTime;
 
@@ -11,10 +13,16 @@ public class GameManager : MonoBehaviour
     public static UnityEvent onGameEnd = new UnityEvent();
 
     private bool gameActive = false;
-    
+
     void Start()
     {
         StartGame();
+    }
+
+    void OnDestroy()
+    {
+        onGameStart.RemoveAllListeners();
+        onGameEnd.RemoveAllListeners();
     }
 
     void Update()
@@ -23,11 +31,14 @@ public class GameManager : MonoBehaviour
 
         currentTime -= Time.deltaTime;
 
-        if(currentTime <= 0f)
+        if (currentTime <= 0f)
         {
             currentTime = 0f;
             EndGame();
         }
+
+        if (timerText != null)
+            timerText.text = Mathf.CeilToInt(currentTime).ToString();
     }
 
     public void StartGame()
@@ -40,10 +51,11 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         gameActive = false;
+        if (timerText != null)
+            timerText.text = "0";
         onGameEnd.Invoke();
     }
 
-    // call to increase time when enemy killed
     public void AddTime(float amount)
     {
         currentTime += amount;
